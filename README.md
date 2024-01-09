@@ -2,7 +2,7 @@
 
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
-![Alt text](cover.png)
+![Alt text](UI.png)
 
 ---
 
@@ -33,8 +33,6 @@ python3 pixel.py
 A window will open where you can select an image to edit. Use the various tools and sliders in the GUI to edit the image.
 
 ## Interface 🎨
-
-![Alt text](UI.png)
 
 The interface is divided into 4 parts:
 
