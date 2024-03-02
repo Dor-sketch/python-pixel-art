@@ -1,165 +1,8 @@
-"""
-This program allows the user to create pixel art from an image.
-The user can select an image, and then use the slider to change the pixel size.
-The user can also select the number of colors to use in the image.
-The user can then click on the image to paint the pixels.
-The user can also save the image as a png file.
-"""
-
-import copy
-from datetime import datetime
-import tkinter as tk
-from tkinter import filedialog
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, RadioButtons, Slider, TextBox
 import matplotlib.colors as mcolors
 from PIL import Image
-
-
-def save_history_before_action(method):
-    """
-    Decorator to save the current state of the image before an action is performed.
-    """
-
-    def wrapper(self, *args, **kwargs):
-        if len(self.history) > 10:
-            self.history.pop(0)
-        self.save_to_history()  # Save current state before action
-        return method(self, *args, **kwargs)
-
-    return wrapper
-
-
-class ImageEditor:
-    """
-    Class to represent the image editor.
-    """
-
-    def __init__(self, image_path=None, pixel_size=6, num_colors=4):
-        self.pixel_size = pixel_size
-        self.num_colors = num_colors
-        self.image_path = image_path if image_path else self.load_image()
-        self.original_image = Image.open(self.image_path)
-        self.quantized_image = self.original_image.quantize(colors=num_colors)
-        self.color_palette = [
-            tuple(self.quantized_image.getpalette()[i: i + 3])
-            for i in range(0, num_colors * 3, 3)
-        ]
-        self.image = self.pixelate_image(self.image_path, pixel_size)
-        self.history = []
-        self.paint_color = self.color_palette[0]
-
-    @save_history_before_action
-    def change_num_colors(self, num_colors):
-        """
-        Change the number of colors in the image.
-        """
-        self.num_colors = num_colors
-        self.image = self.pixelate_image(self.image_path, self.pixel_size)
-        # reset the color palette buttons
-        self.color_palette = self.calculate_new_palette(self.num_colors)
-
-    def change_color(self, label):
-        """
-        Change the color of the paint brush.
-        """
-        index = int(label.split(" ")[-1]) - 1
-        self.paint_color = self.color_palette[index]
-
-    def load_image(self):
-        """
-        Load an image from the user's computer.
-        """
-        root = tk.Tk()
-        root.withdraw()
-        return filedialog.askopenfilename(title="Select Image")
-
-    def save_to_history(self):
-        """
-        Save the current state of the image to the history.
-        """
-        self.history.append(
-            [copy.deepcopy(self.image), self.pixel_size, self.num_colors]
-        )
-
-    def pixelate_image(self, image_path, pixel_size):
-        """
-        Pixelate the image.
-        """
-        image = Image.open(image_path)
-        image = image.resize(
-            (image.size[0] // pixel_size,
-             image.size[1] // pixel_size), Image.NEAREST
-        )
-        if self.num_colors:
-            image = image.convert(
-                "P", palette=Image.ADAPTIVE, colors=self.num_colors)
-        return image.resize(
-            (image.size[0] * pixel_size, image.size[1]
-             * pixel_size), Image.NEAREST
-        )
-
-    def save_image(self, file_name):
-        """
-        Save the image as a png file.
-        """
-        file_name = (
-            file_name if file_name else datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
-        )
-        self.image.save(file_name, "PNG")
-
-    def save_transparent_png(self, event=None):
-        """
-        Save the image as a transparent png file.
-        """
-        image = self.image.convert("RGBA")
-        new_data = []
-        brightest_color = self.color_palette[0]
-        for item in image.getdata():
-            if all(abs(item[i] - brightest_color[i]) < 20 for i in range(3)):
-                new_data.append((255, 255, 255, 0))
-            else:
-                new_data.append(item)
-        image.putdata(new_data)
-        file_name = datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
-        image.save(file_name, "PNG")
-
-    @save_history_before_action
-    def paint_pixel(self, x, y):
-        """
-        Paint the pixel at the given coordinates.
-        """
-        for i in range(x, min(x + self.pixel_size, self.image.width)):
-            for j in range(y, min(y + self.pixel_size, self.image.height)):
-                self.image.putpixel((i, j), self.paint_color)
-
-    def calculate_new_palette(self, new_num_colors):
-        """
-        Calculate the new color palette when the number of colors is changed.
-        """
-        # Calculate the new palette
-        new_palette = self.quantized_image.getpalette()[: new_num_colors * 3]
-        # Convert the palette list into a list of tuples for easier use
-        new_palette = [
-            tuple(new_palette[i: i + 3]) for i in range(0, len(new_palette), 3)
-        ]
-        return new_palette
-
-    @save_history_before_action
-    def change_pixel_size(self, pixel_size):
-        """
-        Change the pixel size.
-        """
-        self.pixel_size = int(pixel_size)
-        self.image = self.pixelate_image(self.image_path, self.pixel_size)
-        self.color_palette = self.calculate_new_palette(self.num_colors)
-
-    def undo(self):
-        """
-        Undo the last action.
-        """
-        if len(self.history) > 0:
-            self.image, self.pixel_size, self.num_colors = self.history.pop()
+import numpy as np
 
 
 class BoardGUI:
@@ -216,7 +59,7 @@ class BoardGUI:
                 button_height,
             ]
         )
-        self.btn_save_transparent = Button(ax_save_transparent, "Transparent")
+        self.btn_save_transparent = Button(ax_save_transparent, "Cooler")
         self.btn_save_transparent.on_clicked(
             self.image_editor.save_transparent_png)
 
@@ -293,6 +136,37 @@ class BoardGUI:
         self.btn_exit = Button(ax_exit, "Exit")
         self.btn_exit.on_clicked(self.exit)
 
+        ax_crop_background = plt.axes(
+            [start_x, 0.6, button_width, button_height])
+        self.btn_crop_background = Button(
+            ax_crop_background, "Crop Background")
+        self.btn_crop_background.on_clicked(self.image_editor.crop_background)
+
+        # Adjust the 'bottom' value to ensure the button does not overlap with other widgets
+        ax_create_gif = plt.axes([start_x, 0.4, button_width, button_height])
+        self.btn_create_gif = Button(ax_create_gif, "Create GIF")
+        self.btn_create_gif.on_clicked(self.create_GIF)
+
+        # add button to display the grid
+        ax_display_grid = plt.axes([start_x, 0.35, button_width, button_height])
+        self.btn_display_grid = Button(ax_display_grid, "Display Grid")
+        self.btn_display_grid.on_clicked(self.turn_on_grid)
+
+    def turn_on_grid(self, event):
+        """
+        Display the grid on the image.
+        """
+        # check if the grid is already displayed - if so turn it off
+        if self.ax.xaxis.get_visible():
+            self.ax.xaxis.set_visible(False)
+            self.ax.yaxis.set_visible(False)
+        else:
+            self.ax.xaxis.set_visible(True)
+            self.ax.yaxis.set_visible(True)
+            self.change_pixel_size(self.image_editor.pixel_size)
+
+        self.fig.canvas.draw()
+
     def exit(self, event):
         """
         Called when the exit button is clicked.
@@ -331,21 +205,54 @@ class BoardGUI:
         self.is_slider_adjusting = True
         self.temp_pixel_size = int(event)
 
+
+    def change_pixel_size(self, new_pixel_size):
+        """
+        Change the number of ticks on the axes when the pixel size changes.
+        """
+        # Calculate the new ticks
+        all_ticks = np.arange(0, max(self.ax.get_xlim()[1], self.ax.get_ylim()[1]), new_pixel_size)
+        label_ticks = all_ticks[::len(all_ticks)//5]  # Label every 1/5 of the board
+
+        # Set the new ticks
+        self.ax.set_xticks(all_ticks, minor=True)
+        self.ax.set_yticks(all_ticks, minor=True)
+
+        # Set the new labels
+        self.ax.set_xticks(label_ticks)
+        self.ax.set_yticks(label_ticks)
+
+        # Set the labels to be the 1D count of pixels until the current tick
+        self.ax.set_xticklabels([str(int(tick / new_pixel_size)) for tick in label_ticks])
+        self.ax.set_yticklabels([len(all_ticks) - 1 - int(tick / new_pixel_size) for tick in label_ticks])
+
+        # Enable the grid
+        self.ax.grid(True, which='both')
+
+        # Redraw the canvas
+        self.fig.canvas.draw()
+
     def increase_pixel_size(self, event):
         """
         Called when the increase pixel size button is clicked
         """
         self.image_editor.change_pixel_size(self.image_editor.pixel_size + 1)
         self.pixel_size_slider.set_val(self.image_editor.pixel_size)
+        # update the axes accordingly - aka the number of pixels
+        self.change_pixel_size(self.image_editor.pixel_size)
+
         self.display_image()
 
     def decrease_pixel_size(self, event):
         """
         Called when the decrease pixel size button is clicked
         """
-        self.image_editor.change_pixel_size(self.image_editor.pixel_size - 1)
-        self.pixel_size_slider.set_val(self.image_editor.pixel_size)
-        self.display_image()
+        if self.image_editor.pixel_size > 1:
+            self.image_editor.change_pixel_size(self.image_editor.pixel_size - 1)
+            self.pixel_size_slider.set_val(self.image_editor.pixel_size)
+            # update the axes accordingly - aka the number of pixels
+            self.change_pixel_size(self.image_editor.pixel_size)
+            self.display_image()
 
     def on_slider_released(self, event):
         """
@@ -374,5 +281,37 @@ class BoardGUI:
             self.display_image()
 
 
-image_editor = ImageEditor()
-board_gui = BoardGUI(image_editor)
+    def create_GIF(self, event):
+        """
+        Save the state of the GUI as an image at each step and create a GIF.
+        """
+        images = []
+        for i in range(12):
+            # Save the current state of the GUI as an image
+            self.fig.canvas.draw()
+            image = np.frombuffer(self.fig.canvas.tostring_rgb(), dtype='uint8')
+            image  = image.reshape(self.fig.canvas.get_width_height()[::-1] + (3,))
+            images.append(Image.fromarray(image))
+
+            self.increase_pixel_size(None)
+
+        for _ in range(3):
+            # create a pause in the GIF
+            images.append(Image.fromarray(image))
+
+        for i in range(17):
+            # Save the current state of the GUI as an image
+            self.fig.canvas.draw()
+            image = np.frombuffer(self.fig.canvas.tostring_rgb(), dtype='uint8')
+            image  = image.reshape(self.fig.canvas.get_width_height()[::-1] + (3,))
+            images.append(Image.fromarray(image))
+
+            self.decrease_pixel_size(None)
+
+        for _ in range(3):
+            images.append(Image.fromarray(image))
+
+        # Convert the list of images into a GIF
+        images[0].save("record.gif", save_all=True, append_images=images[1:], loop=0, duration=250)
+        plt.close()
+        print("GIF created")

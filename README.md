@@ -2,7 +2,9 @@
 
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
-![Alt text](UI.png)
+<p align="center">
+  <img src="images/record.gif" alt="Pixel Art Editor" width="600">
+</p>
 
 ---
 
@@ -34,6 +36,10 @@ A window will open where you can select an image to edit. Use the various tools 
 
 ## Interface 🎨
 
+<p align="center">
+  <img src="images/UI.png" alt="Pixel Art Editor" width="600">
+</p>
+
 The interface is divided into 4 parts:
 
 - **Board**: The board is where the image is displayed. You can use the tools to edit the image by clicking on the board. The pixel you click on will be updated based on the color selected in the palette.
@@ -45,6 +51,10 @@ The interface is divided into 4 parts:
 - **Menu**: The menu in the top left allows you to save the image in different formats, or quit the application. below the menu is the history slider, which allows you to undo and redo actions.
 
 ## How it works 🧙‍♂️
+
+<p align="center">
+  <img src="./images/20240302131152.png" alt="Pixel Art Editor" width="400">
+</p>
 
 The image editor is built using the matplot library. The board is a matplot figure, and the pixels are matplot patches. The color of each patch is updated when the user clicks on the board. The main magic of the application is in the `pixelate_image`: it creates the pixelated version of the image by resizing the image to the desired pixel size, and then resizing it back to the original size. The processing also includes optionl color quantization, which reduces the number of colors in the image by grouping similar colors together.
 
