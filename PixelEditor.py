@@ -47,6 +47,16 @@ class PixelEditor:
         self.history = []
         self.paint_color = self.color_palette[0]
 
+    def reset_image(self):
+        """
+        Reset the image to the original image.
+        """
+        temp = self.image
+        self.image = self.original_image
+        self.original_image = temp
+        self.history = []
+
+
     @save_history_before_action
     def change_num_colors(self, num_colors):
         """
@@ -96,6 +106,7 @@ class PixelEditor:
             (image.size[0] * pixel_size, image.size[1]
              * pixel_size), Image.NEAREST
         )
+
 
     def save_image(self, file_name=None):
         """

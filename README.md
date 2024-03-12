@@ -29,15 +29,19 @@ This project presents a pixel art image editor developed in Python, offering a u
 To start the image editor, run the following command in the terminal:
 
 ```bash
-python3 pixel.py
+python3 main.py
 ```
 
-A window will open where you can select an image to edit. Use the various tools and sliders in the GUI to edit the image.
+A window will open where you can select an image to edit. Use the various tools and sliders in the GUI to edit the image. If an image already exists in the program directory, it will be loaded automatically. Otherwise, you can open an image using the file menu, or from the command line:
+
+```bash
+python3 main.py path/to/image.png
+```
 
 ## Interface 🎨
 
 <p align="center">
-  <img src="images/UI.png" alt="Pixel Art Editor" width="600">
+  <img src="images/new_gui.png" alt="Pixel Art Editor" width="900">
 </p>
 
 The interface is divided into 4 parts:
