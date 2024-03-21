@@ -8,6 +8,15 @@ This project presents a pixel art image editor developed in Python, offering a u
 
 ---
 
+## Coming Soon: GameBoyAI (GBAI)
+
+<p align="center">
+  <i>Stay tuned for updates! 🎮</i>
+  <img src="images/GBAI.png" alt="GameBoyAI" width="900">
+</p>
+
+---
+
 ## Features 🛠
 
 - **Pixel Art Creation**: Easily create and manipulate pixel art images.
@@ -39,6 +48,10 @@ python3 main.py path/to/image.png
 ```
 
 ## Interface 🎨
+
+<p align="center">
+  <img src="images/new_gui2.png" alt="Pixel Art Editor" width="900">
+</p>
 
 <p align="center">
   <img src="images/new_gui.png" alt="Pixel Art Editor" width="900">
