@@ -15,13 +15,6 @@ This project presents a pixel art image editor developed in Python, offering a u
   <img src="images/GBAI.png" alt="GameBoyAI">
   <br>
   <i>Stay tuned for updates! 🎮</i>
-<<<<<<< HEAD
-=======
-=======
-  <i>Stay tuned for updates! 🎮</i>
-  <img src="images/GBAI.png" alt="GameBoyAI" width="900">
->>>>>>> 824e85b583ec22d117d92f41e228cd2e2d10cb68
->>>>>>> e3162acfa49a1ec42736963a80fb7b8c1b4abeec
 </p>
 
 ---
