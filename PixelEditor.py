@@ -11,7 +11,6 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image
-from CropBackground import CropBackground
 
 
 def save_history_before_action(method):
@@ -71,8 +70,8 @@ class PixelEditor:
         """
         Change the color of the paint brush.
         """
-        index = int(label.split(" ")[-1]) - 1
-        self.paint_color = self.color_palette[index]
+        # index = int(label.split(" ")[-1]) - 1
+        self.paint_color = self.color_palette[label]
 
     def load_image(self):
         """
@@ -117,7 +116,7 @@ class PixelEditor:
         )
         self.image.save(file_name, "PNG")
 
-    def save_transparent_png(self, event=None):
+    def save_transparent_png(self, event=None, file_name=None):
         """
         Save the image as a transparent png file.
         """
@@ -130,25 +129,14 @@ class PixelEditor:
             else:
                 new_data.append(item)
         image.putdata(new_data)
-        file_name = datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
+        if file_name is None:
+            file_name = datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
+        else:
+            # check if has .png extension
+            if file_name[-4:] != ".png":
+                file_name += ".png"
         image.save(file_name, "PNG")
 
-    def crop_background(self, event=None):
-        """
-        Crop the background of the image.
-        """
-        # crop the original image
-        original_image_path = self.image_path
-        crop_background = CropBackground(original_image_path, "output.png")
-        crop_background.crop_background()
-        self.image_path = "output.png"
-        self.original_image = Image.open(self.image_path)
-        self.quantized_image = self.original_image.quantize(colors=self.num_colors)
-        self.color_palette = [
-            tuple(self.quantized_image.getpalette()[i: i + 3])
-            for i in range(0, self.num_colors * 3, 3)
-        ]
-        self.image = self.pixelate_image(self.image_path, self.pixel_size)
 
 
 
