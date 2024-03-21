@@ -11,6 +11,7 @@ This project presents a pixel art image editor developed in Python, offering a u
 ## Coming Soon: GameBoyAI (GBAI)
 
 <p align="center">
+<<<<<<< HEAD
   <img src="images/GBAI.png" alt="GameBoyAI">
   <br>
   <i>Stay tuned for updates! 🎮</i>
