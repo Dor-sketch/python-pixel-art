@@ -37,11 +37,7 @@ class PixelEditor:
         self.num_colors = num_colors
         self.image_path = image_path if image_path else self.load_image()
         self.original_image = Image.open(self.image_path)
-        self.quantized_image = self.original_image.quantize(colors=num_colors)
-        self.color_palette = [
-            tuple(self.quantized_image.getpalette()[i: i + 3])
-            for i in range(0, num_colors * 3, 3)
-        ]
+        self.color_palette = self.calculate_new_palette(self.num_colors, self.original_image)
         self.image = self.pixelate_image(self.image_path, pixel_size)
         self.history = []
         self.paint_color = self.color_palette[0]
@@ -70,8 +66,14 @@ class PixelEditor:
         """
         Change the color of the paint brush.
         """
-        # index = int(label.split(" ")[-1]) - 1
-        self.paint_color = self.color_palette[label]
+        try:
+            color_index = self.color_palette.index(label)
+        except ValueError:
+            color_index = -1
+        if color_index != -1:
+            self.paint_color = self.color_palette[color_index]
+        else:
+            print("Color not found in palette")
 
     def load_image(self):
         """
@@ -79,7 +81,8 @@ class PixelEditor:
         """
         root = tk.Tk()
         root.withdraw()
-        return filedialog.askopenfilename(title="Select Image")
+        file_path = filedialog.askopenfilename()
+        return file_path
 
     def save_to_history(self):
         """
@@ -89,10 +92,13 @@ class PixelEditor:
             [copy.deepcopy(self.image), self.pixel_size, self.num_colors]
         )
 
-    def pixelate_image(self, image_path, pixel_size):
+    def pixelate_image(self, image_path=None, pixel_size=None):
         """
         Pixelate the image.
         """
+        pixel_size = pixel_size if pixel_size else self.pixel_size + 1
+        if not image_path:
+            image_path = self.image_path
         image = Image.open(image_path)
         image = image.resize(
             (image.size[0] // pixel_size,
@@ -101,10 +107,12 @@ class PixelEditor:
         if self.num_colors:
             image = image.convert(
                 "P", palette=Image.ADAPTIVE, colors=self.num_colors)
+        self.pixel_size = pixel_size
         return image.resize(
             (image.size[0] * pixel_size, image.size[1]
              * pixel_size), Image.NEAREST
         )
+
 
 
     def save_image(self, file_name=None):
@@ -150,16 +158,28 @@ class PixelEditor:
             for j in range(y, min(y + self.pixel_size, self.image.height)):
                 self.image.putpixel((i, j), self.paint_color)
 
-    def calculate_new_palette(self, new_num_colors):
+    def calculate_new_palette(self, new_num_colors, image=None):
         """
         Calculate the new color palette when the number of colors is changed.
         """
+        if not image:
+            image = self.image
         # Calculate the new palette
-        new_palette = self.quantized_image.getpalette()[: new_num_colors * 3]
+        quantized_image = image.quantize( new_num_colors)
+        new_palette = quantized_image.getpalette()[: new_num_colors * 3]
         # Convert the palette list into a list of tuples for easier use
+        print(new_palette)
         new_palette = [
             tuple(new_palette[i: i + 3]) for i in range(0, len(new_palette), 3)
         ]
+        # if dont have enough colors remove duplicates
+        # check for duplicates
+        unique_colors = set()
+        for color in new_palette:
+            unique_colors.add(color)
+        new_palette = list(unique_colors)
+        print(new_palette)
+        print(new_num_colors)
         return new_palette
 
     @save_history_before_action
