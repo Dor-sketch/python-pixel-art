@@ -8,9 +8,8 @@ from PyQt5.QtWidgets import QPushButton, QSlider, \
     QFileDialog, QComboBox, QMessageBox, QStyle
 from PyQt5.QtGui import QPixmap, QColor, QIcon
 from PyQt5.QtWidgets import QInputDialog, QFileDialog, QSlider, QStyle
-from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.colors as mcolors
-
+from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 
 
 class CustomToolbar(NavigationToolbar):
@@ -30,6 +29,8 @@ class CustomToolbar(NavigationToolbar):
         self.init_pixel_size_slider()
         self.init_save_button()
         self.init_num_colors_button()
+        self.init_load_button()
+        self.init_undo_button()
         self.init_exit_button()
 
     def init_color_palette(self):
@@ -135,7 +136,7 @@ class CustomToolbar(NavigationToolbar):
         self.addWidget(self.exit_button)
 
     def init_num_colors_button(self):
-        self.num_colors_button = QPushButton("Num Colors", self)
+        self.num_colors_button = QPushButton("Colors", self)
         self.num_colors_button.setToolTip("Change number of colors")
         self.num_colors_button.clicked.connect(self.change_num_colors)
         self.num_colors_button.setStyleSheet("""
@@ -159,15 +160,18 @@ class CustomToolbar(NavigationToolbar):
         """
         Open a dialog box to change the number of colors.
         """
+        current_num_colors = self.image_editor.num_colors  # Get current number of colors
         msg_box = QInputDialog(self)
         msg_box.setWindowTitle("Change Number of Colors")
         msg_box.setLabelText("Enter the number of colors:")
         msg_box.setOkButtonText("Ok")
         msg_box.setCancelButtonText("Cancel")
+        # Set the initial value of the slider
+        msg_box.setIntValue(current_num_colors)
         num_colors, ok = msg_box.getInt(
-            self, "Change Number of Colors", "Enter the number of colors:")
+            self, "Change Number of Colors", "Enter the number of colors:", current_num_colors-1)
         if ok:
-            self._on_num_colors_submit(num_colors)
+            self._on_num_colors_submit(num_colors+1)
 
     def _on_num_colors_submit(self, num_colors):
         self.image_editor.change_num_colors(num_colors)
@@ -216,6 +220,8 @@ class CustomToolbar(NavigationToolbar):
             saving_format = "Normal"
         elif msg_box.clickedButton() == transparent_button:
             saving_format = "Transparent"
+        elif msg_box.clickedButton() == gif_button:
+            saving_format = "GIF"
         if saving_format:
             file_dialog = QFileDialog()
             file_dialog.setAcceptMode(QFileDialog.AcceptSave)
@@ -229,6 +235,10 @@ class CustomToolbar(NavigationToolbar):
             if file_name:  # Check if a file name was provided
                 if saving_format == "Normal":
                     self.image_editor.save_image(file_name)
+                elif saving_format == "GIF":
+                    # change the file name to a gif file
+                    file_name = file_name.split(".")[0] + ".gif"
+                    self.image_editor.make_gif(file_name)
                 else:
                     self.image_editor.save_transparent_png(
                         file_path, file_name)
@@ -267,3 +277,61 @@ class CustomToolbar(NavigationToolbar):
         color = self.colors[self.color_plate_combobox.currentIndex()]
         print(color)
         self.image_editor.change_color(color)
+
+    def init_load_button(self):
+        self.load_button = QPushButton("Load", self)
+        self.load_button.setToolTip("Load Image")
+        self.load_button.clicked.connect(self.load_image)
+        self.load_button.setStyleSheet("""
+            QPushButton {
+                background-color: #333;
+                color: #fff;
+                border: 1px solid #000;
+                padding: 10px;
+                font-size: 18px;
+            }
+            QPushButton:hover {
+                background-color: #666;
+            }
+            QPushButton:pressed {
+                background-color: #999;
+            }
+        """)
+        self.addWidget(self.load_button)
+
+    def load_image(self):
+        """
+        Open a dialog box to load an image from the user's computer.
+        """
+        self.board_gui.image_editor.load_image()
+        self.board_gui.display_image()
+
+    def init_undo_button(self):
+        self.undo_button = QPushButton("", self)
+        self.undo_button.setToolTip("Undo the last action")
+        self.undo_button.clicked.connect(self.undo)
+        self.undo_button.setIcon(
+            self.style().standardIcon(QStyle.SP_ArrowBack))
+        self.undo_button.setStyleSheet("""
+            QPushButton {
+                background-color: #333;
+                color: #fff;
+                border: 1px solid #000;
+                padding: 10px;
+                font-size: 18px;
+            }
+            QPushButton:hover {
+                background-color: #666;
+            }
+            QPushButton:pressed {
+                background-color: #999;
+            }
+        """)
+        self.addWidget(self.undo_button)
+
+    def undo(self):
+        """
+        Undo the last action.
+        """
+        self.image_editor.undo()
+        self.board_gui.display_image()

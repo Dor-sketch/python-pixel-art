@@ -10,7 +10,9 @@ import copy
 from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
+import os
+from PyQt5.QtWidgets import QFileDialog
 
 
 def save_history_before_action(method):
@@ -35,9 +37,18 @@ class PixelEditor:
     def __init__(self, image_path=None, pixel_size=6, num_colors=4):
         self.pixel_size = pixel_size
         self.num_colors = num_colors
-        self.image_path = image_path if image_path else self.load_image()
-        self.original_image = Image.open(self.image_path)
-        self.color_palette = self.calculate_new_palette(self.num_colors, self.original_image)
+        self.image_path = image_path if image_path else self.load_image(
+            init=True)
+        self.original_image = None
+        try:
+            self.image = Image.open(self.image_path)
+        except FileNotFoundError:
+            raise FileNotFoundError("File not found")
+        except UnidentifiedImageError:
+            print("Invalid image format")
+            raise UnidentifiedImageError("Invalid image format")
+        self.color_palette = self.calculate_new_palette(
+            self.num_colors, self.original_image)
         self.image = self.pixelate_image(self.image_path, pixel_size)
         self.history = []
         self.paint_color = self.color_palette[0]
@@ -50,7 +61,6 @@ class PixelEditor:
         self.image = self.original_image
         self.original_image = temp
         self.history = []
-
 
     @save_history_before_action
     def change_num_colors(self, num_colors):
@@ -75,14 +85,22 @@ class PixelEditor:
         else:
             print("Color not found in palette")
 
-    def load_image(self):
+    def load_image(self, init=False):
         """
         Load an image from the user's computer.
         """
-        root = tk.Tk()
-        root.withdraw()
-        file_path = filedialog.askopenfilename()
-        return file_path
+        print("Select an image file")
+        file_dialog = QFileDialog()
+        file_path, _ = file_dialog.getOpenFileName()
+        if not file_path:
+            raise FileNotFoundError("No file selected")
+        if init:
+            return file_path
+        self.image_path = file_path
+        self.original_image = Image.open(self.image_path)
+        self.image = self.pixelate_image(self.image_path, self.pixel_size)
+        self.color_palette = self.calculate_new_palette(self.num_colors)
+        self.history = []
 
     def save_to_history(self):
         """
@@ -112,8 +130,6 @@ class PixelEditor:
             (image.size[0] * pixel_size, image.size[1]
              * pixel_size), Image.NEAREST
         )
-
-
 
     def save_image(self, file_name=None):
         """
@@ -145,10 +161,6 @@ class PixelEditor:
                 file_name += ".png"
         image.save(file_name, "PNG")
 
-
-
-
-
     @save_history_before_action
     def paint_pixel(self, x, y):
         """
@@ -165,7 +177,7 @@ class PixelEditor:
         if not image:
             image = self.image
         # Calculate the new palette
-        quantized_image = image.quantize( new_num_colors)
+        quantized_image = image.quantize(new_num_colors)
         new_palette = quantized_image.getpalette()[: new_num_colors * 3]
         # Convert the palette list into a list of tuples for easier use
         print(new_palette)
@@ -197,3 +209,40 @@ class PixelEditor:
         """
         if len(self.history) > 0:
             self.image, self.pixel_size, self.num_colors = self.history.pop()
+
+    def make_gif(self, file_name, frames=19):
+        """
+        Create a gif of the image by changing the pixel size,
+        and saving the image at each step, then combining the images into a gif.
+        """
+
+        for i in range(frames):
+            # Save the current state of the GUI as an image
+            self.image.save("temp" + str(i) + ".png")
+            self.change_pixel_size(self.pixel_size + 1)
+
+        # create a gif from the saved images than delete them
+        images_forward = []
+        images_reverse = []
+        for i in range(frames):
+            image = Image.open("temp" + str(i) + ".png")
+            images_forward.append(image)
+            # Add to the start of the list for reverse sequence
+            images_reverse.insert(0, image.copy())
+
+        # Create a longer pause in the GIF at the most pixelated image
+        # Increase this number for a longer pause
+        pause_images = [images_forward[-1]] * 5
+
+        # Combine forward sequence, pause, and reverse sequence
+        images = images_forward + pause_images
+        # check for gif directory
+        if not os.path.exists("gifs"):
+            os.makedirs("gifs")
+        file_name = "gifs/" + file_name
+        images[0].save(file_name, save_all=True,
+                       append_images=images[1:], duration=100, loop=0)
+        for i in range(frames):
+            os.remove("temp" + str(i) + ".png")
+
+        print("GIF created")

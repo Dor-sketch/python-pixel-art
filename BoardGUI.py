@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from PixelEditor import PixelEditor
 from PyQt5.QtCore import Qt
+import numpy as np
 
 class BoardGUI(QWidget):
     def __init__(self, image_editor):
@@ -105,7 +106,8 @@ class BoardGUI(QWidget):
 
         small_fig = plt.figure()
         dialog_box = small_fig.add_subplot()
-        text_box = TextBox(dialog_box, "Enter number of colors: ")
+        current_num_colors = self.image_editor.num_colors  # Get current number of colors
+        text_box = TextBox(dialog_box, f"Enter number of colors (current: {current_num_colors}): ")
         text_box.on_submit(submit)
         plt.show()
 

@@ -30,7 +30,7 @@ class GameboyAdvanceWindow(QWidget):
 
         # Set fixed window size
         self.setFixedSize(300, 500)
-        image_editor = PixelEditor("/Users/dorpascal/projects.nosync/PythonPixelArt/profile copy.png")
+        image_editor = PixelEditor()
         self.main_window = BoardGUI(image_editor)
         layout.addWidget(self.main_window)
 
