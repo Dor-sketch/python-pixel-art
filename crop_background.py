@@ -55,7 +55,7 @@ class CropBackground:
 
         # Apply the GrabCut algorithm
         cv2.grabCut(image, mask, rect, bgd_model,
-                    fgd_model, 5, cv2.GC_INIT_WITH_MASK)
+                    fgd_model, 1, cv2.GC_INIT_WITH_MASK)
 
         # Create a mask to remove the background
         mask2 = np.where((mask == cv2.GC_FGD) | (

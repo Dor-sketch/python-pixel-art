@@ -77,10 +77,11 @@ The tools include:
 - **Manipulate Pixel Size**: Change the size of the pixels on the board using the pixels slider. The pixel size is also the brush size when drawing on the board.
 
   <p align="center">
-    <img src="images/interface.png" alt="Pixel Size" width="300">
-    <img src="images/slider_up.png" alt="Pixel Size" width="300">
+    <img src="images/interface.png" alt="Bruce" width="300">
+    <img src="images/slider_up.png" alt="Bruce" width="300">
     <br>
-    <img src="images/white.png" alt="Pixel Size" width="400">
+    <img src="Bruce.png" alt="Bruce" width="400">
+    <img src="images/examp2.jpeg" alt="Pixel Size" width="400">
     <br>
     <i>Moving the slider to the right increases the number of pixels (decreases pixel size), resulting in a clearer image and smaller brush size. The name `Bruce` was hidden using the draw tool. Can you also notice two pixels changed in the right eye?</i>
   </p>
@@ -90,7 +91,7 @@ The tools include:
   <p align="center">
     <img src="images/color_change.png" alt="Number of Colors" width="200">
     <img src="images/less_colors.png" alt="Number of Colors" width="200">
-    <bt>
+    <br>
     <img src="./images/output.png" alt="Pixel Art Editor" width="400">
 
     <br>
