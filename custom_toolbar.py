@@ -13,6 +13,9 @@ from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationTo
 
 
 class CustomToolbar(NavigationToolbar):
+    """
+    Class to represent the custom toolbar for the image editor.
+    """
     def __init__(self, canvas, parent=None, board_gui=None):
         super().__init__(canvas, parent)
         self.clear()
@@ -20,6 +23,12 @@ class CustomToolbar(NavigationToolbar):
         self.reset_button = None
         self.exit_button = None
         self.save_button = None
+        self.pixel_size_slider = None
+        self.num_colors_button = None
+        self.load_button = None
+        self.image_editor = None
+        self.undo_button = None
+        self.colors = []
         self.board_gui = board_gui
         self.init_buttons()
 
@@ -51,7 +60,6 @@ class CustomToolbar(NavigationToolbar):
                 image: url("down-arrow.png");
             }
         """)
-        self.colors = []
         self.updat_color_palette(self.board_gui.image_editor)
         self.color_plate_combobox.currentIndexChanged.connect(
             self._on_color_plate_selected)
@@ -110,6 +118,9 @@ class CustomToolbar(NavigationToolbar):
         self.addWidget(self.pixel_size_slider)
 
     def init_exit_button(self):
+        """
+        Initialize the exit button.
+        """
         self.exit_button = QPushButton("", self)
         self.exit_button.setIcon(
             self.style().standardIcon(QStyle.SP_DialogCloseButton))
@@ -136,6 +147,9 @@ class CustomToolbar(NavigationToolbar):
         self.addWidget(self.exit_button)
 
     def init_num_colors_button(self):
+        """
+        Initialize the button to change the number of colors.
+        """
         self.num_colors_button = QPushButton("Colors", self)
         self.num_colors_button.setToolTip("Change number of colors")
         self.num_colors_button.clicked.connect(self.change_num_colors)

@@ -5,13 +5,13 @@ for the image editor.
 
 import sys
 from PyQt5.QtWidgets import QWidget,QApplication, QVBoxLayout, QStyle
+from PyQt5.QtCore import Qt
 from matplotlib.widgets import TextBox
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
-from PIL import Image
-from PixelEditor import PixelEditor
-from PyQt5.QtCore import Qt
 import numpy as np
+from PIL import Image
+from pixel_editor import PixelEditor
 
 class BoardGUI(QWidget):
     def __init__(self, image_editor):
@@ -54,7 +54,6 @@ class BoardGUI(QWidget):
             self.ax.clear()  # Clear before displaying to avoid overlaying images
             self.ax.axis("off")
             self.ax.imshow(self.image_editor.image)
-            # update main window
             self.canvas.draw()
             self.update()
             self.show()
@@ -170,13 +169,3 @@ class BoardGUI(QWidget):
         )
         plt.close()
         print("GIF created")
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    image_editor = PixelEditor()
-    main_window = BoardGUI(image_editor)
-    toolbar = CustomToolbar(main_window.canvas, main_window, main_window)
-    main_window.layout.addWidget(toolbar)
-    main_window.show()
-    sys.exit(app.exec_())

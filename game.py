@@ -3,9 +3,9 @@ from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton
 import sys
-from PixelEditor import PixelEditor
+from pixel_editor import PixelEditor
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
-from BoardGUI import BoardGUI
+from board_gui import BoardGUI
 
 
 GAME_BOY_PURPLE = QColor(100, 100, 160)

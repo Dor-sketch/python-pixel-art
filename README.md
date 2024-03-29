@@ -55,7 +55,7 @@ python3 main.py path/to/image.png
 Note: This section was updated to reflect the new interface. The previous interface can be found in old versions of the repository.
 
 <p align="center">
-  <img src="images/back_added.png" alt="Pixel Art Editor" width="500">
+  <img src="images/Screenshot 2024-03-29 at 23.34.09.png" alt="Pixel Art Editor" width="500">
   <br>
   <i>Pixel Art Editor Interface</i>
 </p>
@@ -80,16 +80,21 @@ The tools include:
     <img src="images/interface.png" alt="Pixel Size" width="300">
     <img src="images/slider_up.png" alt="Pixel Size" width="300">
     <br>
+    <img src="images/white.png" alt="Pixel Size" width="400">
+    <br>
     <i>Moving the slider to the right increases the number of pixels (decreases pixel size), resulting in a clearer image and smaller brush size. The name `Bruce` was hidden using the draw tool. Can you also notice two pixels changed in the right eye?</i>
   </p>
 
 - **Change Number of Colors**: Reduce or increase the number of colors in the image using the colors slider. This is useful for color quantization, which reduces the number of colors in the image to a specified number.
 
   <p align="center">
-    <img src="images/color_change.png" alt="Number of Colors" width="300">
-    <img src="images/less_colors.png" alt="Number of Colors" width="300">
+    <img src="images/color_change.png" alt="Number of Colors" width="200">
+    <img src="images/less_colors.png" alt="Number of Colors" width="200">
+    <bt>
+    <img src="./images/output.png" alt="Pixel Art Editor" width="400">
+
     <br>
-    <i>Same image after reducing the color range. The color palette is updated accordingly</i>
+    <i>Same image after reducing the color range. The color palette is updated accordingly. The finale result used the `crop_background.py` for an artistic effect.</i>
   </p>
 
 - **Save**: Save the image to the program directory. You can save the image in various formats, including PNG, JPEG, and GIF. After choosing the format, you can specify the name of the file and the location to save it. The `Transparent` optional allows you to save the image with a transparent background. This is useful for creating images that can be used in other applications.
@@ -98,10 +103,10 @@ The tools include:
     <img src="images/gif_save.png" alt="Save Image" width="300">
     <img src="images/save_as.png" alt="Save Image" width="400">
     <br>
-      <img src="images/pixel_bruce.png" alt="Save Image" width="300">
+      <img src="images/111.png" alt="Save Image" width="300">
     <img src="images/PikaBruce.gif" alt="Save Image" width="300">
     <br>
-    <i>Image saved as a PNG with a transparent background (left) and the same image saved as a GIF (right)</i>
+    <i>Image saved as a PNG with color processing (left) and the same image saved as a GIF (right)</i>
   </p>
 
 ## How it works 🧙‍♂️

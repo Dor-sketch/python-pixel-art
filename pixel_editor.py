@@ -124,7 +124,8 @@ class PixelEditor:
         )
         if self.num_colors:
             image = image.convert(
-                "P", palette=Image.ADAPTIVE, colors=self.num_colors)
+                "P", palette=Image.ADAPTIVE, colors=self.num_colors, dither=Image.FLOYDSTEINBERG
+            )
         self.pixel_size = pixel_size
         return image.resize(
             (image.size[0] * pixel_size, image.size[1]

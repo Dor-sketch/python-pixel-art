@@ -2,10 +2,10 @@
 This module uses the OpenCV library to crop the background of an image.
 """
 
-import cv2
-import numpy as np
 import os
 import sys
+import cv2
+import numpy as np
 
 
 class CropBackground:
@@ -73,14 +73,17 @@ def main():
     The main function for the CropBackground class.
     """
 
+    # ask for input and output paths
+    input_path = input("Enter the path to the image: ")
     # Get the input and output paths from the command line arguments if they exist
-    input_path = "profile.png"
     output_path = "output.png"
 
     # Check if the input path is a file
     if not os.path.isfile(input_path):
         print("Error: The input path is not a file.")
         sys.exit(1)
+
+    print("Cropping the background of the image...")
 
     # Create an instance of the CropBackground class
     crop_background = CropBackground(input_path, output_path)
