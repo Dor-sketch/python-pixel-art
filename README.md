@@ -3,7 +3,7 @@
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
 <p align="center">
-  <img src="images/logo.jpg" alt="Pixel Art Editor" width="800">
+  <img src="images/comp.png" alt="Pixel Art Editor" width="800">
 </p>
 
 ---
