@@ -2,9 +2,9 @@
 
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
-<div style="align: center;">
-  <img src="images/banner.png" alt="Pixel Art Editor" width="800">
-</div>
+<p align="center">
+  <img src="images/logo.jpg" alt="Pixel Art Editor" width="800">
+</p>
 
 ---
 
@@ -70,6 +70,14 @@ Before you start editing the image, you can pass it throgh the `crop_background.
   <i>Pixel Art Editor Interface</i>
 </p>
 
+<p align="center">
+    <img src="./images/final_image.png" alt="Pixel Art Editor" width="400">
+    <img src="result.png" alt="Pixel Size" width="400">
+    <br>
+  <br>
+  <i>Example results: a 1-bit image and a 4-bit image</i>
+</p>
+
 The interface is divided into 2 parts:
 
 - **Board**: The board is where the image is displayed. You can use the tools to edit the image by clicking on the board. The pixel you click on will be updated based on the color selected in the palette.
@@ -90,22 +98,18 @@ The tools include:
     <img src="images/interface.png" alt="Bruce" width="300">
     <img src="images/slider_up.png" alt="Bruce" width="300">
     <br>
-    <img src="Bruce.png" alt="Bruce" width="400">
-    <img src="result.png" alt="Pixel Size" width="400">
-    <br>
     <i>Moving the slider to the right increases the number of pixels (decreases pixel size), resulting in a clearer image and smaller brush size. The name `Bruce` was hidden using the draw tool. Can you also notice two pixels changed in the right eye?</i>
   </p>
 
 - **Change Number of Colors**: Reduce or increase the number of colors in the image using the colors slider. This is useful for color quantization, which reduces the number of colors in the image to a specified number.
 
   <p align="center">
-    <img src="images/color_change.png" alt="Number of Colors" width="200">
-    <img src="images/less_colors.png" alt="Number of Colors" width="200">
+    <img src="images/color_change.png" alt="Number of Colors" width="300">
+    <img src="images/less_colors.png" alt="Number of Colors" width="300">
     <br>
-    <img src="./images/output.png" alt="Pixel Art Editor" width="400">
-
+    <i>Same image after reducing the color range. The color palette is updated accordingly.
     <br>
-    <i>Same image after reducing the color range. The color palette is updated accordingly. The finale result used the `crop_background.py` for an artistic effect.</i>
+    The finale result used the `crop_background.py` for an artistic effect.</i>
   </p>
 
 - **Save**: Save the image to the program directory. You can save the image in various formats, including PNG, JPEG, and GIF. After choosing the format, you can specify the name of the file and the location to save it. The `Transparent` optional allows you to save the image with a transparent background. This is useful for creating images that can be used in other applications.
@@ -245,6 +249,10 @@ The `save_image` method opens a dialog box to save the image in different format
 </p>
 
 ## Contributing 🤝
+
+<p align="center">
+  <img src="images/banner.png" alt="Pixel Art Editor" width="800">
+</p>
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue if you encounter any problems. This program is still in beta, and there are many features that can be added to improve the user experience, as well as the performance of the application. The following are some ideas for future improvements:
 
