@@ -44,7 +44,14 @@ class CropBackground:
         fgd_model = np.zeros((1, 65), np.float64)
         # avoid cutting head or dark hair
         # Adjust the rectangle to more accurately encompass the face
-        rect = (50, 50, image.shape[1] - 50, image.shape[0] - 50)
+        # Adjust the rectangle to more accurately encompass the face
+        # Increase start_x and start_y to move the rectangle to the right and up
+        # Decrease width and height to make the rectangle smaller
+        start_x = 300
+        start_y = 300
+        width = image.shape[1] - 400
+        height = image.shape[0] - 200
+        rect = (start_x, start_y, width, height)
 
         # Initialize the mask as probable background
         mask = np.full(image.shape[:2], cv2.GC_PR_BGD, dtype=np.uint8)
@@ -55,7 +62,7 @@ class CropBackground:
 
         # Apply the GrabCut algorithm
         cv2.grabCut(image, mask, rect, bgd_model,
-                    fgd_model, 1, cv2.GC_INIT_WITH_MASK)
+                    fgd_model, 10, cv2.GC_INIT_WITH_MASK)
 
         # Create a mask to remove the background
         mask2 = np.where((mask == cv2.GC_FGD) | (

@@ -2,9 +2,9 @@
 
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
-<p align="center">
-  <img src="images/record.gif" alt="Pixel Art Editor" width="600">
-</p>
+<div style="align: center;">
+  <img src="images/banner.png" alt="Pixel Art Editor" width="800">
+</div>
 
 ---
 
@@ -54,8 +54,18 @@ python3 main.py path/to/image.png
 
 Note: This section was updated to reflect the new interface. The previous interface can be found in old versions of the repository.
 
+Before you start editing the image, you can pass it throgh the `crop_background.py` script to remove the background. This script uses the `PIL` library to crop the background of the image. The script takes the image path as an argument and saves the cropped image in the program directory. You can also set adjust the area to crop.
+
 <p align="center">
-  <img src="images/Screenshot 2024-03-29 at 23.34.09.png" alt="Pixel Art Editor" width="500">
+  <img src="Bruce.png" alt="Bruce" width="400">
+  <img src="Bruce_crop.png" alt="Cropped Bruce" width="400">
+  <br>
+  <i>Original image (left) and cropped image (right)</i>
+</p>
+
+
+<p align="center">
+  <img src="images/usage.gif" alt="Pixel Art Editor" width="500">
   <br>
   <i>Pixel Art Editor Interface</i>
 </p>
@@ -81,7 +91,7 @@ The tools include:
     <img src="images/slider_up.png" alt="Bruce" width="300">
     <br>
     <img src="Bruce.png" alt="Bruce" width="400">
-    <img src="images/examp2.jpeg" alt="Pixel Size" width="400">
+    <img src="result.png" alt="Pixel Size" width="400">
     <br>
     <i>Moving the slider to the right increases the number of pixels (decreases pixel size), resulting in a clearer image and smaller brush size. The name `Bruce` was hidden using the draw tool. Can you also notice two pixels changed in the right eye?</i>
   </p>
@@ -100,15 +110,9 @@ The tools include:
 
 - **Save**: Save the image to the program directory. You can save the image in various formats, including PNG, JPEG, and GIF. After choosing the format, you can specify the name of the file and the location to save it. The `Transparent` optional allows you to save the image with a transparent background. This is useful for creating images that can be used in other applications.
 
-  <p align="center">
-    <img src="images/gif_save.png" alt="Save Image" width="300">
-    <img src="images/save_as.png" alt="Save Image" width="400">
-    <br>
-      <img src="images/111.png" alt="Save Image" width="300">
-    <img src="images/PikaBruce.gif" alt="Save Image" width="300">
-    <br>
-    <i>Image saved as a PNG with color processing (left) and the same image saved as a GIF (right)</i>
-  </p>
+<p align="center">
+  <img src="images/record.gif" alt="Pixel Art Editor" width="600">
+</p>
 
 ## How it works 🧙‍♂️
 
