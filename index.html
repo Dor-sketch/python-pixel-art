@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Pixelify Sans", sans-serif;
+            font-size: large;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hint {
+            margin-top: 20px;
+            font-size: medium;
+            color:            color: #666;
+        }
+
+        img {
+            margin: 20px 0;
+            padding: 10px;
+            cursor: pointer;
+            border: 2px solid #ccc;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: small;
+            color: #999;
+        }
+    </style>
+    <script>
+        async function main() {
+            let pyodide = await loadPyodide({
+                indexURL: "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
+            });
+            await pyodide.loadPackage(["micropip"]);
+            await pyodide.runPythonAsync(`
+                import micropip
+                await micropip.install('pillow')
+            `);
+            await pyodide.runPythonAsync(`
+                import base64
+                from PIL import Image, UnidentifiedImageError
+                from io import BytesIO
+
+                def process_image(base64_data, pixel_size=10, num_colors=4):
+                    image_data = base64.b64decode(base64_data)
+                    image_file = BytesIO(image_data)
+                    image = Image.open(image_file)
+                    image = image.resize(
+                        (image.size[0] // pixel_size, image.size[1] // pixel_size), Image.NEAREST
+                    )
+                    if num_colors:
+                        image = image.convert(
+                            "P", palette=Image.ADAPTIVE, colors=num_colors, dither=Image.FLOYDSTEINBERG
+                        )
+                    image = image.resize(
+                        (image.size[0] * pixel_size, image.size[1] * pixel_size), Image.NEAREST
+                    )
+                    buffer = BytesIO()
+                    image.save(buffer, format="PNG")
+                    img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
+                    return img_str
+
+                def paint_pixel(base64_data, x, y, color, pixel_size):
+                    image_data = base64.b64decode(base64_data)
+                    image_file = BytesIO(image_data)
+                    image = Image.open(image_file)
+                    for i in range(x, min(x + pixel_size, image.width)):
+                        for j in range(y, min(y + pixel_size, image.height)):
+                            image.putpixel((i, j), color)
+                    buffer = BytesIO()
+                    image.save(buffer, format="PNG")
+                    img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
+                    return img_str
+            `);
+
+            window.processImage = async (base64_data, pixel_size, num_colors) => {
+                let pythonCode = `
+                img_str = process_image("${base64_data}", ${pixel_size}, ${num_colors})
+                img_str
+                `;
+                let img_str = await pyodide.runPythonAsync(pythonCode);
+                document.getElementById('image').src = "data:image/png;base64," + img_str;
+                window.currentImage = img_str;
+            };
+
+            window.paintPixel = async (x, y, color, pixel_size) => {
+                let pythonCode = `
+                img_str = paint_pixel("${window.currentImage}", ${x}, ${y}, ${color}, ${pixel_size})
+                img_str
+                `;
+                let img_str = await pyodide.runPythonAsync(pythonCode);
+                document.getElementById('image').src = "data:image/png;base64," + img_str;
+                window.currentImage = img_str;
+            };
+
+            let base64Image = null;
+
+            document.getElementById('fileInput').addEventListener('change', function (e) {
+                var file = e.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var arrayBuffer = event.target.result;
+                    var bytes = new Uint8Array(arrayBuffer);
+                    var binary = '';
+                    for (var i = 0; i < bytes.byteLength; i++) {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    base64Image = window.btoa(binary);
+                    window.processImage(base64Image, pixelSizeSlider.value, numColorsSlider.value);
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            document.getElementById('pixelSizeSlider').addEventListener('input', function () {
+                document.getElementById('pixelSizeValue').innerText = this.value;
+                if (base64Image) {
+                    window.processImage(base64Image, this.value, numColorsSlider.value);
+                }
+            });
+
+            document.getElementById('numColorsSlider').addEventListener('input', function () {
+                document.getElementById('numColorsValue').innerText = this.value;
+                if (base64Image) {
+                    window.processImage(base64Image, pixelSizeSlider.value, this.value);
+                }
+            });
+
+            document.getElementById('image').addEventListener('click', function (e) {
+                var rect = this.getBoundingClientRect();
+                var x = Math.floor((e.clientX - rect.left) / pixelSizeSlider.value) * pixelSizeSlider.value;
+                var y = Math.floor((e.clientY - rect.top) / pixelSizeSlider.value) * pixelSizeSlider.value;
+                var color = [255, 0, 0, 255]; // Example color (red)
+                window.paintPixel(x, y, color, pixelSizeSlider.value);
+            });
+
+            window.addEventListener('dragover', function (e) {
+                e.preventDefault();
+            }, false);
+
+            window.addEventListener('drop', function (e) {
+                e.preventDefault();
+                var files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    var file = files[0];
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        var arrayBuffer = event.target.result;
+                        var bytes = new Uint8Array(arrayBuffer);
+                        var binary = '';
+                        for (var i = 0; i < bytes.byteLength; i++) {
+                            binary += String.fromCharCode(bytes[i]);
+                        }
+                        base64Image = window.btoa(binary);
+                        window.processImage(base64Image, pixelSizeSlider.value, numColorsSlider.value);
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+            }, false);
+        }
+
+        main();
+    </script>
+</head>
+
+<body>
+    <h1>Pixel Editor</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="controls">
+        <div class="slider-container">
+            <label for="pixelSizeSlider">Pixel Size: <span id="pixelSizeValue">10</span></label>
+            <input type="range" id="pixelSizeSlider" min="1" max="50" value="10">
+        </div>
+        <div class="slider-container">
+            <label for="numColorsSlider">Number of Colors: <span id="numColorsValue">4</span></label>
+            <input type="range" id="numColorsSlider" min="2" max="256" value="4">
+        </div>
+    </div>
+    <h3 class="hint">Load an image or drop it here</h3>
+    <img id="image" src="" alt="Processed Image" />
+    <footer class="footer">
+        <p>Made By Dor © <script>document.write(new Date().getFullYear());</script></p>
+    </footer>
+    <script>
+
+
+        document.getElementById('image').addEventListener('load', function () {
+            if (this.src === "") {
+                document.querySelector('.hint').innerText = "Load an image or drop it here";
+            } else {
+                document.querySelector('.hint').innerText = "Drag the sliders to change the pixel size and number of colors";
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -139,6 +139,10 @@ class PixelEditor:
         file_name = (
             file_name if file_name else datetime.now().strftime("%Y%m%d%H%M%S") + ".png"
         )
+        # # set pic size based on pixel size
+        # self.image = self.image.resize(
+        #     (self.image.width // self.pixel_size, self.image.height // self.pixel_size)
+        # )
         self.image.save(file_name, "PNG")
 
     def save_transparent_png(self, event=None, file_name=None):

@@ -23,8 +23,8 @@ def create_mask_with_angle(shape, angle):
 
 
 # Open the images
-image2 = Image.open('result.png').convert('RGBA')
-image1 = Image.open('Bruce_crop.png').convert('RGBA')
+image2 = Image.open('./images/result.png').convert('RGBA')
+image1 = Image.open('./images/Bruce_crop.png').convert('RGBA')
 
 # Ensure second image is the same size as the first
 image2 = image2.resize(image1.size)

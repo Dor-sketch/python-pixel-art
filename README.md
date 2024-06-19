@@ -1,9 +1,15 @@
-# The Python Pixel Art Editor (Beta) 🎨
+<p align="center">
+  <img src="images/transparent_dor.png" alt="Pixel Art Editor" width="300">
+</p>
+<h1 align="center">The Python Pixel Art Editor</h1>
+<h2 align="center">Create pixel art images with ease - Now available Online! 🎮</h2>
+
+> To use the online version, visit the following link: [dorpascal.com/pixel-art-editor](https://dorpascal.com/pixel-art-editor/)
 
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
 <p align="center">
-  <img src="images/comp.png" alt="Pixel Art Editor" width="800">
+  <img src="images/comp.png" alt="Pixel Art Editor" width="300">
 </p>
 
 ---
@@ -57,22 +63,22 @@ Note: This section was updated to reflect the new interface. The previous interf
 Before you start editing the image, you can pass it throgh the `crop_background.py` script to remove the background. This script uses the `PIL` library to crop the background of the image. The script takes the image path as an argument and saves the cropped image in the program directory. You can also set adjust the area to crop.
 
 <p align="center">
-  <img src="Bruce.png" alt="Bruce" width="400">
-  <img src="Bruce_crop.png" alt="Cropped Bruce" width="400">
+  <img src="./images/Bruce.png" alt="Bruce" width="200">
+  <img src="./images/Bruce_crop.png" alt="Cropped Bruce" width="200">
   <br>
   <i>Original image (left) and cropped image (right)</i>
 </p>
 
 
 <p align="center">
-  <img src="images/usage.gif" alt="Pixel Art Editor" width="500">
+  <img src="/images/gifs/usage.gif" alt="Pixel Art Editor" width="300">
   <br>
   <i>Pixel Art Editor Interface</i>
 </p>
 
 <p align="center">
-    <img src="./images/final_image.png" alt="Pixel Art Editor" width="400">
-    <img src="result.png" alt="Pixel Size" width="400">
+    <img src="./images/final_image.png" alt="Pixel Art Editor" width="200">
+    <img src="./images/result.png" alt="Pixel Size" width="200">
     <br>
   <br>
   <i>Example results: a 1-bit image and a 4-bit image</i>
@@ -104,8 +110,8 @@ The tools include:
 - **Change Number of Colors**: Reduce or increase the number of colors in the image using the colors slider. This is useful for color quantization, which reduces the number of colors in the image to a specified number.
 
   <p align="center">
-    <img src="images/color_change.png" alt="Number of Colors" width="300">
-    <img src="images/less_colors.png" alt="Number of Colors" width="300">
+    <img src="images/color_change.png" alt="Number of Colors" width="200">
+    <img src="images/less_colors.png" alt="Number of Colors" width="200">
     <br>
     <i>Same image after reducing the color range. The color palette is updated accordingly.
     <br>
@@ -114,16 +120,10 @@ The tools include:
 
 - **Save**: Save the image to the program directory. You can save the image in various formats, including PNG, JPEG, and GIF. After choosing the format, you can specify the name of the file and the location to save it. The `Transparent` optional allows you to save the image with a transparent background. This is useful for creating images that can be used in other applications.
 
-<p align="center">
-  <img src="images/record.gif" alt="Pixel Art Editor" width="600">
-</p>
-
 ## How it works 🧙‍♂️
 
 <p align="center">
-  <img src="./images/20240302131152.png" alt="Pixel Art Editor" width="400">
-  <br>
-  <i>Me as a pixel art with transparent background</i>
+  <img src="images/gifs/record.gif" alt="Pixel Art Editor" width="300">
 </p>
 
 The core functionality of the application lies in the `pixelate_image` method: it creates the pixelated version of the image by resizing the image to the desired pixel size, and then resizing it back to the original size. The processing also includes optionl color quantization, which reduces the number of colors in the image by grouping similar colors together.
@@ -243,7 +243,7 @@ The `css` style is used to style the buttons. The `background-color` property se
 The `save_image` method opens a dialog box to save the image in different formats. The user can choose between saving the image with a transparent background, saving the image as a GIF, or saving the image with a normal background. The `QFileDialog` class is used to open a file dialog box to save the image. The `getSaveFileName` method is used to get the file path where the image will be saved. The file name is extracted from the file path, and the image is saved using the `save_image` method of the `PixelEditor` class. The `make_gif` method is used to create an animated GIF from multiple images. The `save_transparent_png` method is used to save the image as a PNG with a transparent background.
 
 <p align="center">
-  <img src="images/GBAI.png" alt="GameBoyAI">
+  <img src="images/GBAI.png" alt="GameBoyAI" width="300">
   <br>
   <i>The board on a console interface - Stay tuned for updates! 🎮</i>
 </p>
@@ -251,7 +251,7 @@ The `save_image` method opens a dialog box to save the image in different format
 ## Contributing 🤝
 
 <p align="center">
-  <img src="images/banner.png" alt="Pixel Art Editor" width="800">
+  <img src="images/banner.png" alt="Pixel Art Editor" width="300">
 </p>
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue if you encounter any problems. This program is still in beta, and there are many features that can be added to improve the user experience, as well as the performance of the application. The following are some ideas for future improvements:
