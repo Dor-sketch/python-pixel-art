@@ -63,6 +63,8 @@
             border: 2px solid #ccc;
             background-color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            max-height: 80%;
         }
 
         .footer {
@@ -230,8 +232,9 @@
             <input type="range" id="numColorsSlider" min="2" max="256" value="4">
         </div>
     </div>
-    <h3 class="hint">Load an image or drop it here</h3>
-    <img id="image" src="" alt="Processed Image" />
+    <h3 class="hint">Load an image or drop it here.</h3>
+    <h4>Iphone users: choose an image from files (not photos)</h4>
+    <img id="image" src="" alt="Nothing to show yet">
     <footer class="footer">
         <p>Made By Dor © <script>document.write(new Date().getFullYear());</script></p>
         <a href="https://dorpascal.com">dorpascal.com</a>
@@ -239,9 +242,11 @@
     <script>
         document.getElementById('image').addEventListener('load', function () {
             if (this.src === "") {
-                document.querySelector('.hint').innerText = "Load an image or drop it here";
+                document.querySelector('.hint').innerText = "Load an image or drop it here.";
             } else {
                 document.querySelector('.hint').innerText = "Drag the sliders to change the pixel size and number of colors";
+                document.querySelector('.hint').style.color = "#666";
+                document.querySelector('h4').style.display = "none";
             }
         });
     </script>
