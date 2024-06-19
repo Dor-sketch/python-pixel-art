@@ -4,7 +4,7 @@
 <h1 align="center">The Python Pixel Art Editor</h1>
 <h2 align="center">Create pixel art images with ease - Now available Online! 🎮</h2>
 
-> To use the online version, visit the following link: [dorpascal.com/pixel-art-editor](https://dorpascal.com/pixel-art-editor/)
+> To use the online version, visit the following link: [dorpascal.com/PythonPixelArt](https://dorpascal.com/PythonPixelArt/)
 
 This project presents a pixel art image editor developed in Python, offering a user-friendly interface and a variety of image editing tools. It's designed for artists, hobbyists, and anyone interested in pixel art creation.
 
