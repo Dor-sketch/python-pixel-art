@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
- <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T7HFKFX0PR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -14,15 +14,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixel Editor</title>
-    <meta name="description" content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
+    <meta name="description"
+        content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
     <meta name="author" content="Dor Pascal">
     <meta name="keywords" content="pixel, editor, image, resize, colors, python, pillow, pyodide">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#f0f0f0">
     <link rel="icon" href="https://dorpascal.com/favicon.ico" type="image/x-icon">
     <meta property="og:title" content="Pixel Editor">
-    <meta property="og:description" content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
-    <meta property="og:image" content="https://repository-images.githubusercontent.com/739924646/8885570d-0f3d-4ff8-87b2-8cb3c2545070">
+    <meta property="og:description"
+        content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
+    <meta property="og:image"
+        content="https://repository-images.githubusercontent.com/739924646/8885570d-0f3d-4ff8-87b2-8cb3c2545070">
     <meta property="og:url" content="https://dorpascal.com/PythonPixelArt">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Pixel Editor">
@@ -33,65 +36,53 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+    <link rel="stylesheet" href="./css/styles.css">
     <style>
-        body {
+        .color-picker-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: "Pixelify Sans", sans-serif;
-            font-size: large;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
-        .controls {
-            margin-top: 10px;
-            display: flex;
-            gap: 20px;
-        }
-
-        .slider-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .hint {
-            margin-top: 20px;
-            font-size: medium;
-            color: #666;
-        }
-
-        img {
-            margin: 20px 0;
-            padding: 10px;
+        .color-box {
+            width: 30px;
+            height: 30px;
             cursor: pointer;
-            border: 2px solid #ccc;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 80%;
-            max-height: 80%;
         }
 
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer p {
-            margin: 0;
-            font-size: small;
-            color: #999;
+        #imageCanvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
         }
     </style>
+</head>
+
+<body>
+    <h1>Pixel Editor</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="controls">
+        <div class="slider-container">
+            <label for="pixelSizeSlider">Pixel Size: <span id="pixelSizeValue">10</span></label>
+            <input type="range" id="pixelSizeSlider" min="1" max="50" value="10">
+        </div>
+        <div class="slider-container">
+            <label for="numColorsSlider">Number of Colors: <span id="numColorsValue">4</span></label>
+            <input type="range" id="numColorsSlider" min="2" max="256" value="4">
+        </div>
+        <div id="colorPalette" class="color-picker-container">
+            <!-- Dynamically generated color palette -->
+        </div>
+    </div>
+    <h3 class="hint">Load an image or drop it here.</h3>
+    <h4>Iphone users: choose an image from files (not photos)</h4>
+    <canvas id="imageCanvas" width="400" height="400"></canvas>
+    <footer class="footer">
+        <p>Made By Dor ©
+            <script>document.write(new Date().getFullYear());</script>
+        </p>
+        <a href="https://dorpascal.com">dorpascal.com</a>
+    </footer>
     <script>
         async function main() {
             let pyodide = await loadPyodide({
@@ -132,11 +123,19 @@
                     image = Image.open(image_file)
                     for i in range(x, min(x + pixel_size, image.width)):
                         for j in range(y, min(y + pixel_size, image.height)):
-                            image.putpixel((i, j), color)
+                            image.putpixel((i, j), tuple(color))
                     buffer = BytesIO()
                     image.save(buffer, format="PNG")
                     img_str = base64.b64encode(buffer.getvalue()).decode("utf-8")
                     return img_str
+
+                def extract_palette(base64_data, num_colors=4):
+                    image_data = base64.b64decode(base64_data)
+                    image_file = BytesIO(image_data)
+                    image = Image.open(image_file)
+                    image = image.convert("P", palette=Image.ADAPTIVE, colors=num_colors)
+                    palette = image.getpalette()[:num_colors*3]
+                    return palette
             `);
 
             window.processImage = async (base64_data, pixel_size, num_colors) => {
@@ -145,17 +144,29 @@
                 img_str
                 `;
                 let img_str = await pyodide.runPythonAsync(pythonCode);
-                document.getElementById('image').src = "data:image/png;base64," + img_str;
+                loadImageToCanvas(img_str);
                 window.currentImage = img_str;
+
+
+
+                let paletteCode = `
+                    palette = extract_palette("${base64_data}", ${num_colors})
+                    palette
+                    `;
+                let paletteProxy = await pyodide.runPythonAsync(paletteCode);
+                let palette = paletteProxy.toJs(); // Convert PyProxy to JavaScript array
+                generateColorPalette(palette);
+                console.log(palette);
             };
 
             window.paintPixel = async (x, y, color, pixel_size) => {
+                let colorTuple = `(${color.join(",")})`;
                 let pythonCode = `
-                img_str = paint_pixel("${window.currentImage}", ${x}, ${y}, ${color}, ${pixel_size})
+                img_str = paint_pixel("${window.currentImage}", ${x}, ${y}, ${colorTuple}, ${pixel_size})
                 img_str
                 `;
                 let img_str = await pyodide.runPythonAsync(pythonCode);
-                document.getElementById('image').src = "data:image/png;base64," + img_str;
+                loadImageToCanvas(img_str);
                 window.currentImage = img_str;
             };
 
@@ -191,13 +202,77 @@
                 }
             });
 
-            document.getElementById('image').addEventListener('click', function (e) {
-                var rect = this.getBoundingClientRect();
-                var x = Math.floor((e.clientX - rect.left) / pixelSizeSlider.value) * pixelSizeSlider.value;
-                var y = Math.floor((e.clientY - rect.top) / pixelSizeSlider.value) * pixelSizeSlider.value;
-                var color = [255, 0, 0, 255]; // Example color (red)
-                window.paintPixel(x, y, color, pixelSizeSlider.value);
-            });
+            function loadImageToCanvas(base64Image) {
+                var canvas = document.getElementById('imageCanvas');
+                var ctx = canvas.getContext('2d');
+                var img = new Image();
+                img.onload = function () {
+                    // Calculate the new canvas size while maintaining aspect ratio
+                    let maxWidth = window.innerWidth * 0.9; // 90% of the window width
+                    let maxHeight = window.innerHeight * 0.9; // 90% of the window height
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth || height > maxHeight) {
+                        let scale = Math.min(maxWidth / width, maxHeight / height);
+                        width = width * scale;
+                        height = height * scale;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                };
+                img.src = "data:image/png;base64," + base64Image;
+            }
+            function generateColorPalette(palette) {
+                let colorPalette = document.getElementById('colorPalette');
+                colorPalette.innerHTML = '';
+                for (let i = 0; i < palette.length; i += 3) {
+                    let color = `rgb(${palette[i]}, ${palette[i + 1]}, ${palette[i + 2]})`;
+                    let colorBox = document.createElement('div');
+                    colorBox.className = 'color-box';
+                    colorBox.style.backgroundColor = color;
+                    // Use an IIFE to capture the current value of `i`
+                    (function (i) {
+                        colorBox.addEventListener('click', function () {
+                            selectedColor = [palette[i], palette[i + 1], palette[i + 2], 255];
+                        });
+                    })(i);
+                    colorPalette.appendChild(colorBox);
+                }
+            }
+
+            let selectedColor = [255, 0, 0, 255]; // Default red color
+
+            let painting = false;
+
+            function startPainting(e) {
+                painting = true;
+                paintPixel(e);
+            }
+
+            function stopPainting() {
+                painting = false;
+            }
+
+            function paintPixel(e) {
+                if (!painting) return;
+
+                var canvas = document.getElementById('imageCanvas');
+                var rect = canvas.getBoundingClientRect();
+                var pixelSize = parseInt(document.getElementById('pixelSizeSlider').value);
+                var x = Math.floor((e.clientX - rect.left) / pixelSize) * pixelSize;
+                var y = Math.floor((e.clientY - rect.top) / pixelSize) * pixelSize;
+
+                window.paintPixel(x, y, selectedColor, pixelSize);
+            }
+
+            var canvas = document.getElementById('imageCanvas');
+            canvas.addEventListener('mousedown', startPainting);
+            canvas.addEventListener('mousemove', paintPixel);
+            canvas.addEventListener('mouseup', stopPainting);
+            canvas.addEventListener('mouseleave', stopPainting);
 
             window.addEventListener('dragover', function (e) {
                 e.preventDefault();
@@ -222,42 +297,16 @@
                     reader.readAsArrayBuffer(file);
                 }
             }, false);
+
+            // Adjust canvas size on window resize
+            window.addEventListener('resize', () => {
+                if (base64Image) {
+                    window.processImage(base64Image, pixelSizeSlider.value, numColorsSlider.value);
+                }
+            });
         }
 
         main();
-    </script>
-</head>
-
-<body>
-    <h1>Pixel Editor</h1>
-    <input type="file" id="fileInput" accept="image/*">
-    <div class="controls">
-        <div class="slider-container">
-            <label for="pixelSizeSlider">Pixel Size: <span id="pixelSizeValue">10</span></label>
-            <input type="range" id="pixelSizeSlider" min="1" max="50" value="10">
-        </div>
-        <div class="slider-container">
-            <label for="numColorsSlider">Number of Colors: <span id="numColorsValue">4</span></label>
-            <input type="range" id="numColorsSlider" min="2" max="256" value="4">
-        </div>
-    </div>
-    <h3 class="hint">Load an image or drop it here.</h3>
-    <h4>Iphone users: choose an image from files (not photos)</h4>
-    <img id="image" src="" alt="Nothing to show yet">
-    <footer class="footer">
-        <p>Made By Dor © <script>document.write(new Date().getFullYear());</script></p>
-        <a href="https://dorpascal.com">dorpascal.com</a>
-    </footer>
-    <script>
-        document.getElementById('image').addEventListener('load', function () {
-            if (this.src === "") {
-                document.querySelector('.hint').innerText = "Load an image or drop it here.";
-            } else {
-                document.querySelector('.hint').innerText = "Drag the sliders to change the pixel size and number of colors";
-                document.querySelector('.hint').style.color = "#666";
-                document.querySelector('h4').style.display = "none";
-            }
-        });
     </script>
 </body>
 
