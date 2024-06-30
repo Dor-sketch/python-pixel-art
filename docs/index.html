@@ -34,32 +34,13 @@
     <meta property="og:locale:alternate" content="he_IL">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
     <link rel="stylesheet" href="./css/styles.css">
-    <style>
-        .color-picker-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-
-        .color-box {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-        }
-
-        #imageCanvas {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #000;
-        }
-    </style>
 </head>
-
 <body>
-    <h1>Pixel Editor</h1>
+    <h1>The Pixel Editor</h1>
     <input type="file" id="fileInput" accept="image/*">
     <div class="controls">
         <div class="slider-container">
@@ -73,6 +54,8 @@
         <div id="colorPalette" class="color-picker-container">
             <!-- Dynamically generated color palette -->
         </div>
+        <button id="clearButton"><i class="fas fa-eraser"></i> Clear</button>
+        <button id="saveButton"><i class="fas fa-save"></i> Save</button>
     </div>
     <h3 class="hint">Load an image or drop it here.</h3>
     <h4>Iphone users: choose an image from files (not photos)</h4>
@@ -313,6 +296,20 @@
         }
 
         main();
+
+        document.getElementById('clearButton').addEventListener('click', function () {
+            var canvas = document.getElementById('imageCanvas');
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function () {
+            var canvas = document.getElementById('imageCanvas');
+            var link = document.createElement('a');
+            link.download = 'pixel_art.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
     </script>
 </body>
 

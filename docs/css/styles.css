@@ -76,3 +76,21 @@ img {
     border: 1px solid #000;
     margin-top: 10px;
 }
+
+.color-picker-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.color-box {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+#imageCanvas {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #000;
+}
