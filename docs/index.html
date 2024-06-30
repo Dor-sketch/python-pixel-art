@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-T7HFKFX0PR"></script>
@@ -8,24 +7,20 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-T7HFKFX0PR');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixel Editor</title>
-    <meta name="description"
-        content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
+    <meta name="description" content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
     <meta name="author" content="Dor Pascal">
     <meta name="keywords" content="pixel, editor, image, resize, colors, python, pillow, pyodide">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#f0f0f0">
     <link rel="icon" href="https://dorpascal.com/favicon.ico" type="image/x-icon">
     <meta property="og:title" content="Pixel Editor">
-    <meta property="og:description"
-        content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
-    <meta property="og:image"
-        content="https://repository-images.githubusercontent.com/739924646/8885570d-0f3d-4ff8-87b2-8cb3c2545070">
+    <meta property="og:description" content="A simple pixel editor that allows you to resize and reduce the number of colors in an image.">
+    <meta property="og:image" content="https://repository-images.githubusercontent.com/739924646/8885570d-0f3d-4ff8-87b2-8cb3c2545070">
     <meta property="og:url" content="https://dorpascal.com/PythonPixelArt">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Pixel Editor">
@@ -50,7 +45,6 @@
         <h3>Load an image or drop it here to get started</h3>
         <span class="hand">👇</span>
     </div>
-
 
     <input type="file" id="fileInput" accept="image/*">
     <label for="fileInput" class="file-upload-btn" id="fileInputLabel">
@@ -132,7 +126,6 @@
             `);
 
             window.processImage = async (base64_data, pixel_size, num_colors) => {
-                // hide the hints
                 document.querySelector('.hint').style.display = 'none';
                 document.getElementById('fileInput').style.display = 'none';
                 document.getElementById('fileInputLabel').style.display = 'none';
@@ -147,16 +140,13 @@
                 loadImageToCanvas(img_str);
                 window.currentImage = img_str;
 
-
-
                 let paletteCode = `
                     palette = extract_palette("${base64_data}", ${num_colors})
                     palette
                     `;
                 let paletteProxy = await pyodide.runPythonAsync(paletteCode);
-                let palette = paletteProxy.toJs(); // Convert PyProxy to JavaScript array
+                let palette = paletteProxy.toJs();
                 generateColorPalette(palette);
-                console.log(palette);
             };
 
             window.paintPixel = async (x, y, color, pixel_size) => {
@@ -201,7 +191,7 @@
                     window.processImage(base64Image, pixelSizeSlider.value, this.value);
                 }
             });
-            // Global variables to store the scale factors
+
             var scaleX, scaleY;
 
             function loadImageToCanvas(base64Image) {
@@ -209,8 +199,8 @@
                 var ctx = canvas.getContext('2d');
                 var img = new Image();
                 img.onload = function () {
-                    let maxWidth = 500; // Maximum width for the image
-                    let maxHeight = 500; // Maximum height for the image
+                    let maxWidth = 500;
+                    let maxHeight = 500;
 
                     let width = img.width;
                     let height = img.height;
@@ -221,7 +211,6 @@
                         height = height * scale;
                     }
 
-                    // Store scale factors
                     scaleX = img.width / width;
                     scaleY = img.height / height;
 
@@ -231,6 +220,7 @@
                 };
                 img.src = "data:image/png;base64," + base64Image;
             }
+
             function generateColorPalette(palette) {
                 let colorPalette = document.getElementById('colorPalette');
                 colorPalette.innerHTML = '';
@@ -239,7 +229,6 @@
                     let colorBox = document.createElement('div');
                     colorBox.className = 'color-box';
                     colorBox.style.backgroundColor = color;
-                    // Use an IIFE to capture the current value of `i`
                     (function (i) {
                         colorBox.addEventListener('click', function () {
                             selectedColor = [palette[i], palette[i + 1], palette[i + 2], 255];
@@ -249,7 +238,7 @@
                 }
             }
 
-            let selectedColor = [255, 0, 0, 255]; // Default red color
+            let selectedColor = [255, 0, 0, 255];
 
             let painting = false;
 
@@ -261,6 +250,7 @@
             function stopPainting() {
                 painting = false;
             }
+
             function paintPixel(e) {
                 if (!painting) return;
 
@@ -268,26 +258,40 @@
                 var rect = canvas.getBoundingClientRect();
                 var pixelSize = parseInt(document.getElementById('pixelSizeSlider').value);
 
-                // Adjust x and y coordinates using the scaling factors
                 var x = Math.floor(((e.clientX - rect.left) * scaleX) / pixelSize) * pixelSize;
                 var y = Math.floor(((e.clientY - rect.top) * scaleY) / pixelSize) * pixelSize;
 
                 window.paintPixel(x, y, selectedColor, pixelSize);
             }
+
             var canvas = document.getElementById('imageCanvas');
             canvas.addEventListener('mousedown', startPainting);
             canvas.addEventListener('mousemove', paintPixel);
             canvas.addEventListener('mouseup', stopPainting);
             canvas.addEventListener('mouseleave', stopPainting);
 
+            // Prevent default touch actions on the canvas
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startPainting(e.touches[0]);
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                paintPixel(e.touches[0]);
+            }, { passive: false });
+
+            canvas.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                stopPainting();
+            }, { passive: false });
 
             window.addEventListener('dragover', function (e) {
-                e.preventDefault(); // Prevent default behavior (Prevent file from being opened)
-                // Optionally, add some visual feedback here
+                e.preventDefault();
             }, false);
 
             window.addEventListener('drop', function (e) {
-                e.preventDefault(); // Prevent default behavior (Prevent file from being opened)
+                e.preventDefault();
                 var file = e.dataTransfer.files[0];
                 var reader = new FileReader();
                 reader.onload = function (event) {
@@ -303,7 +307,6 @@
                 reader.readAsArrayBuffer(file);
             });
 
-            // Adjust canvas size on window resize
             window.addEventListener('resize', () => {
                 if (base64Image) {
                     window.processImage(base64Image, pixelSizeSlider.value, numColorsSlider.value);
@@ -318,7 +321,7 @@
             document.querySelector('.controls').style.display = 'none';
             document.querySelector('.hint').style.display = 'block';
             document.getElementById('imageCanvas').style.display = 'none';
-            document.getElementById('fileInputLabel').style.display = 'block'; // Hide the label
+            document.getElementById('fileInputLabel').style.display = 'block';
 
             var canvas = document.getElementById('imageCanvas');
             var ctx = canvas.getContext('2d');
@@ -334,5 +337,4 @@
         });
     </script>
 </body>
-
 </html>
