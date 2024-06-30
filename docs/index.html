@@ -35,7 +35,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
     <link rel="stylesheet" href="./css/styles.css">
     <style>
         .color-picker-container {
@@ -68,7 +68,7 @@
         </div>
         <div class="slider-container">
             <label for="numColorsSlider">Number of Colors: <span id="numColorsValue">4</span></label>
-            <input type="range" id="numColorsSlider" min="2" max="256" value="4">
+            <input type="range" id="numColorsSlider" min="2" max="10" value="3">
         </div>
         <div id="colorPalette" class="color-picker-container">
             <!-- Dynamically generated color palette -->
@@ -86,7 +86,7 @@
     <script>
         async function main() {
             let pyodide = await loadPyodide({
-                indexURL: "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
+                indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/"
             });
             await pyodide.loadPackage(["micropip"]);
             await pyodide.runPythonAsync(`
