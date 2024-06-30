@@ -15,13 +15,12 @@ body, html {
 }
 
 h1 {
-    margin-top: 20px;
     font-size: x-large;
 }
 
 .controls {
     margin-top: 10px;
-    gap: 20px;
+    gap: 4px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -85,12 +84,7 @@ img {
     border: 1px solid #000;
 }
 
-#imageCanvas {
-    max-width: 90%;
-    height: auto;
-    border: 1px solid #000;
-    margin-top: 10px;
-}
+
 
 .color-picker-container {
     display: flex;
@@ -106,9 +100,9 @@ img {
 
 #imageCanvas {
     max-width: 90%;
+    max-height: 50vh;
     height: auto;
-    border: 1px solid #000;
-    margin: 20px;
+    margin: 10px 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 

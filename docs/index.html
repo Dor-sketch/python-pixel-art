@@ -47,9 +47,9 @@
         <button id="clearButton"><i class="fas fa-eraser"></i> Clear</button>
         <button id="saveButton"><i class="fas fa-save"></i> Save</button>
     </div>
-    <h3 class="hint">Load an image or drop it here.<br>Iphone users: choose an image from files (not photos)</h3>
+    <h3 class="hint">Load an image or drop it here.<br>Iphone users: choose an image from <code>files</code> (not photos)</h3>
     <canvas id="imageCanvas" width="400" height="400" style="display: none;"></canvas>
-    <div class="controls">
+    <div class="controls" style="display: none;">
         <div class="slider-container">
             <label for="pixelSizeSlider">Pixel Size: <span id="pixelSizeValue">10</span></label>
             <input type="range" id="pixelSizeSlider" min="1" max="50" value="10">
@@ -127,6 +127,7 @@
                 // hide the hints
                 document.querySelector('.hint').style.display = 'none';
                 document.getElementById('fileInput').style.display = 'none';
+                document.querySelector('.controls').style.display = 'flex';
                 document.getElementById('save-reset').style.display = 'block';
                 document.getElementById('imageCanvas').style.display = 'block';
                 let pythonCode = `
