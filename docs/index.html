@@ -201,15 +201,17 @@
                     window.processImage(base64Image, pixelSizeSlider.value, this.value);
                 }
             });
+            // Global variables to store the scale factors
+            var scaleX, scaleY;
 
             function loadImageToCanvas(base64Image) {
                 var canvas = document.getElementById('imageCanvas');
                 var ctx = canvas.getContext('2d');
                 var img = new Image();
                 img.onload = function () {
-                    // Calculate the new canvas size while maintaining aspect ratio
-                    let maxWidth = window.innerWidth * 0.9; // 90% of the window width
-                    let maxHeight = window.innerHeight * 0.9; // 90% of the window height
+                    let maxWidth = 500; // Maximum width for the image
+                    let maxHeight = 500; // Maximum height for the image
+
                     let width = img.width;
                     let height = img.height;
 
@@ -218,6 +220,10 @@
                         width = width * scale;
                         height = height * scale;
                     }
+
+                    // Store scale factors
+                    scaleX = img.width / width;
+                    scaleY = img.height / height;
 
                     canvas.width = width;
                     canvas.height = height;
@@ -255,19 +261,19 @@
             function stopPainting() {
                 painting = false;
             }
-
             function paintPixel(e) {
                 if (!painting) return;
 
                 var canvas = document.getElementById('imageCanvas');
                 var rect = canvas.getBoundingClientRect();
                 var pixelSize = parseInt(document.getElementById('pixelSizeSlider').value);
-                var x = Math.floor((e.clientX - rect.left) / pixelSize) * pixelSize;
-                var y = Math.floor((e.clientY - rect.top) / pixelSize) * pixelSize;
+
+                // Adjust x and y coordinates using the scaling factors
+                var x = Math.floor(((e.clientX - rect.left) * scaleX) / pixelSize) * pixelSize;
+                var y = Math.floor(((e.clientY - rect.top) * scaleY) / pixelSize) * pixelSize;
 
                 window.paintPixel(x, y, selectedColor, pixelSize);
             }
-
             var canvas = document.getElementById('imageCanvas');
             canvas.addEventListener('mousedown', startPainting);
             canvas.addEventListener('mousemove', paintPixel);
