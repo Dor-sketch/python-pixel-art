@@ -47,6 +47,8 @@
         <button id="clearButton"><i class="fas fa-eraser"></i> Clear</button>
         <button id="saveButton"><i class="fas fa-save"></i> Save</button>
     </div>
+    <h3 class="hint">Load an image or drop it here.<br>Iphone users: choose an image from files (not photos)</h3>
+    <canvas id="imageCanvas" width="400" height="400" style="display: none;"></canvas>
     <div class="controls">
         <div class="slider-container">
             <label for="pixelSizeSlider">Pixel Size: <span id="pixelSizeValue">10</span></label>
@@ -60,8 +62,6 @@
             <!-- Dynamically generated color palette -->
         </div>
     </div>
-    <h3 class="hint">Load an image or drop it here.<br>Iphone users: choose an image from files (not photos)</h3>
-    <canvas id="imageCanvas" width="400" height="400" style="display: none;"></canvas>
     <footer class="footer">
         <p>Made By Dor ©
             <script>document.write(new Date().getFullYear());</script>

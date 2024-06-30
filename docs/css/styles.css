@@ -1,4 +1,4 @@
-body {
+body, html {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,6 +10,8 @@ body {
     padding: 0;
     background-color: #f0f0f0;
     overflow-x: hidden;
+    margin-bottom: 30px; /* Adjust this value based on the footer's height */
+
 }
 
 h1 {
@@ -20,7 +22,10 @@ h1 {
 .controls {
     margin-top: 10px;
     gap: 20px;
-    max-width: 90%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .slider-container {
@@ -30,9 +35,9 @@ h1 {
 }
 
 .hint {
-    margin-top: 20px;
     font-size: medium;
     color: #666;
+    margin: 20px;
 }
 
 img {
@@ -45,15 +50,19 @@ img {
     max-width: 80%;
     max-height: 80%;
 }
-
+/* Adjust the .footer class */
 .footer {
-    position: fixed;
+    position: fixed; /* Make the footer stick to the bottom */
+    left: 0;
     bottom: 0;
     width: 100%;
     text-align: center;
-    background-color: #fff;
+    /* background-color: #fff; */
     padding: 10px;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure the footer is above other content */
+    -webkit-backdrop-filter: blur(2px); /* For Safari */
+    backdrop-filter: saturate(180%) blur(2px); /* Creates a frosted glass effect */
 }
 
 .footer p {
