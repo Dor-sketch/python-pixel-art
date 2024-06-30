@@ -5,7 +5,6 @@ body, html {
     font-family: "Pixelify Sans", sans-serif;
     font-size: large;
     justify-content: start;
-    height: 100vh;
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
@@ -37,6 +36,7 @@ h1 {
     font-size: medium;
     color: #666;
     margin: 20px;
+    text-align: center;
 }
 
 img {
@@ -121,3 +121,30 @@ footer a {
     color: #007bff;
     text-decoration: none;
 }
+
+
+.hand {
+    display: inline-block;
+    animation: handWave 1s ease-in-out infinite;
+}
+@keyframes handWave {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+  #fileInput {
+    display: none; /* Hide the file input */
+  }
+  .file-upload-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+  }

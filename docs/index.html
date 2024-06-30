@@ -42,12 +42,20 @@
 
 <body>
     <h1>The Pixel Editor</h1>
-    <input type="file" id="fileInput" accept="image/*">
     <div class="save-reset" id="save-reset" style="display: none;">
         <button id="clearButton"><i class="fas fa-eraser"></i> Clear</button>
         <button id="saveButton"><i class="fas fa-save"></i> Save</button>
     </div>
-    <h3 class="hint">Load an image or drop it here.<br>Iphone users: choose an image from <code>files</code> (not photos)</h3>
+    <div class="hint">
+        <h3>Load an image or drop it here to get started</h3>
+        <span class="hand">👇</span>
+    </div>
+
+
+    <input type="file" id="fileInput" accept="image/*">
+    <label for="fileInput" class="file-upload-btn" id="fileInputLabel">
+        <i class="fas fa-upload"></i> Upload Image
+    </label>
     <canvas id="imageCanvas" width="400" height="400" style="display: none;"></canvas>
     <div class="controls" style="display: none;">
         <div class="slider-container">
@@ -65,7 +73,7 @@
     <footer class="footer">
         <p>Made By Dor ©
             <script>document.write(new Date().getFullYear());</script>
-        | <a href="https://dorpascal.com">dorpascal.com</a>
+            | <a href="https://dorpascal.com">dorpascal.com</a>
         </p>
     </footer>
     <script>
@@ -127,6 +135,7 @@
                 // hide the hints
                 document.querySelector('.hint').style.display = 'none';
                 document.getElementById('fileInput').style.display = 'none';
+                document.getElementById('fileInputLabel').style.display = 'none';
                 document.querySelector('.controls').style.display = 'flex';
                 document.getElementById('save-reset').style.display = 'block';
                 document.getElementById('imageCanvas').style.display = 'block';
@@ -306,9 +315,11 @@
 
         document.getElementById('clearButton').addEventListener('click', function () {
             document.getElementById('save-reset').style.display = 'none';
+            document.querySelector('.controls').style.display = 'none';
             document.querySelector('.hint').style.display = 'block';
             document.getElementById('imageCanvas').style.display = 'none';
-            document.getElementById('fileInput').style.display = 'block';
+            document.getElementById('fileInputLabel').style.display = 'block'; // Hide the label
+
             var canvas = document.getElementById('imageCanvas');
             var ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
