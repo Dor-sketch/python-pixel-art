@@ -39,32 +39,34 @@
     <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
     <link rel="stylesheet" href="./css/styles.css">
 </head>
+
 <body>
     <h1>The Pixel Editor</h1>
     <input type="file" id="fileInput" accept="image/*">
+    <div class="save-reset" id="save-reset" style="display: none;">
+        <button id="clearButton"><i class="fas fa-eraser"></i> Clear</button>
+        <button id="saveButton"><i class="fas fa-save"></i> Save</button>
+    </div>
     <div class="controls">
         <div class="slider-container">
             <label for="pixelSizeSlider">Pixel Size: <span id="pixelSizeValue">10</span></label>
             <input type="range" id="pixelSizeSlider" min="1" max="50" value="10">
         </div>
         <div class="slider-container">
-            <label for="numColorsSlider">Number of Colors: <span id="numColorsValue">4</span></label>
+            <label for="numColorsSlider">Colors Range: <span id="numColorsValue">4</span></label>
             <input type="range" id="numColorsSlider" min="2" max="10" value="3">
         </div>
         <div id="colorPalette" class="color-picker-container">
             <!-- Dynamically generated color palette -->
         </div>
-        <button id="clearButton"><i class="fas fa-eraser"></i> Clear</button>
-        <button id="saveButton"><i class="fas fa-save"></i> Save</button>
     </div>
-    <h3 class="hint">Load an image or drop it here.</h3>
-    <h4>Iphone users: choose an image from files (not photos)</h4>
-    <canvas id="imageCanvas" width="400" height="400"></canvas>
+    <h3 class="hint">Load an image or drop it here.<br>Iphone users: choose an image from files (not photos)</h3>
+    <canvas id="imageCanvas" width="400" height="400" style="display: none;"></canvas>
     <footer class="footer">
         <p>Made By Dor ©
             <script>document.write(new Date().getFullYear());</script>
+        | <a href="https://dorpascal.com">dorpascal.com</a>
         </p>
-        <a href="https://dorpascal.com">dorpascal.com</a>
     </footer>
     <script>
         async function main() {
@@ -122,6 +124,11 @@
             `);
 
             window.processImage = async (base64_data, pixel_size, num_colors) => {
+                // hide the hints
+                document.querySelector('.hint').style.display = 'none';
+                document.getElementById('fileInput').style.display = 'none';
+                document.getElementById('save-reset').style.display = 'block';
+                document.getElementById('imageCanvas').style.display = 'block';
                 let pythonCode = `
                 img_str = process_image("${base64_data}", ${pixel_size}, ${num_colors})
                 img_str
@@ -263,29 +270,28 @@
             canvas.addEventListener('mouseup', stopPainting);
             canvas.addEventListener('mouseleave', stopPainting);
 
+
             window.addEventListener('dragover', function (e) {
-                e.preventDefault();
+                e.preventDefault(); // Prevent default behavior (Prevent file from being opened)
+                // Optionally, add some visual feedback here
             }, false);
 
             window.addEventListener('drop', function (e) {
-                e.preventDefault();
-                var files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    var file = files[0];
-                    var reader = new FileReader();
-                    reader.onload = function (event) {
-                        var arrayBuffer = event.target.result;
-                        var bytes = new Uint8Array(arrayBuffer);
-                        var binary = '';
-                        for (var i = 0; i < bytes.byteLength; i++) {
-                            binary += String.fromCharCode(bytes[i]);
-                        }
-                        base64Image = window.btoa(binary);
-                        window.processImage(base64Image, pixelSizeSlider.value, numColorsSlider.value);
-                    };
-                    reader.readAsArrayBuffer(file);
-                }
-            }, false);
+                e.preventDefault(); // Prevent default behavior (Prevent file from being opened)
+                var file = e.dataTransfer.files[0];
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var arrayBuffer = event.target.result;
+                    var bytes = new Uint8Array(arrayBuffer);
+                    var binary = '';
+                    for (var i = 0; i < bytes.byteLength; i++) {
+                        binary += String.fromCharCode(bytes[i]);
+                    }
+                    base64Image = window.btoa(binary);
+                    window.processImage(base64Image, pixelSizeSlider.value, numColorsSlider.value);
+                };
+                reader.readAsArrayBuffer(file);
+            });
 
             // Adjust canvas size on window resize
             window.addEventListener('resize', () => {
@@ -298,6 +304,10 @@
         main();
 
         document.getElementById('clearButton').addEventListener('click', function () {
+            document.getElementById('save-reset').style.display = 'none';
+            document.querySelector('.hint').style.display = 'block';
+            document.getElementById('imageCanvas').style.display = 'none';
+            document.getElementById('fileInput').style.display = 'block';
             var canvas = document.getElementById('imageCanvas');
             var ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);

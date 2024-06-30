@@ -4,17 +4,23 @@ body {
     align-items: center;
     font-family: "Pixelify Sans", sans-serif;
     font-size: large;
-    justify-content: center;
+    justify-content: start;
     height: 100vh;
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
+    overflow-x: hidden;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: x-large;
 }
 
 .controls {
     margin-top: 10px;
-    display: flex;
     gap: 20px;
+    max-width: 90%;
 }
 
 .slider-container {
@@ -90,7 +96,25 @@ img {
 }
 
 #imageCanvas {
-    max-width: 100%;
+    max-width: 90%;
     height: auto;
     border: 1px solid #000;
+    margin: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: medium;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
 }
