@@ -93,7 +93,7 @@ class CustomToolbar(NavigationToolbar):
         self.image_editor = self.board_gui.image_editor
         self.pixel_size_slider = QSlider(self)
         self.pixel_size_slider.setOrientation(1)
-        self.pixel_size_slider.setRange(1, 20)
+        self.pixel_size_slider.setRange(1, 50)
         self.pixel_size_slider.setValue(self.image_editor.pixel_size)
         self.pixel_size_slider.setTickPosition(QSlider.TicksBelow)
         self.pixel_size_slider.setStyleSheet("""
