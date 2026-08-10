@@ -82,7 +82,9 @@ class BoardGUI(QWidget):
         Called when the exit button is clicked.
         """
         plt.close()
-        self.app.quit()
+        app = QApplication.instance()
+        if app:
+            app.quit()
 
     def undo(self, event):
         """

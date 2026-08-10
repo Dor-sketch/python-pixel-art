@@ -14,13 +14,13 @@ This project presents a pixel art image editor developed in Python, offering a u
 
 ---
 
-- [Features 🛠](#features-)
-- [Installation 💻](#installation-)
-- [Usage 🖱️](#usage-️)
-- [Interface 🎨](#interface-)
-- [How it works 🧙‍♂️](#how-it-works-️)
-- [Contributing 🤝](#contributing-)
-- [License 📄](#license-)
+1. [Features 🛠](#features-)
+2. [Installation 💻](#installation-)
+3. [Usage 🖱️](#usage-️)
+4. [Interface 🎨](#interface-)
+5. [How it works 🧙‍♂️](#how-it-works-️)
+6. [Contributing 🤝](#contributing-)
+7. [License 📄](#license-)
 
 ---
 
@@ -40,7 +40,11 @@ This project presents a pixel art image editor developed in Python, offering a u
 
 1. Ensure Python 3.x is installed on your system.
 2. Clone the repository to your local machine.
-3. Install the required Python packages.
+3. Install the required Python packages (you can use the [requirements.txt](requirements.txt) file):
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Usage 🖱️
 
